@@ -13,7 +13,7 @@ class TasksController < ApplicationController
 
   def destroy
     @task = Task.find_by(id: params[:id])
-    if @task and @task.destroy
+    if @task&.destroy
       render json: { success: true }
     else
       render json: { success: false }
@@ -23,22 +23,18 @@ class TasksController < ApplicationController
   def mark_complete
     @task = Task.find_by(id: params[:id])
 
-    if @task and @task.update(completed: true)
-      render 'tasks/update'
-    end 
+    render 'tasks/update' if @task&.update(completed: true)
   end
 
   def mark_active
     @task = Task.find_by(id: params[:id])
 
-    if @task and @task.update(completed: false)
-      render 'tasks/update'
-    end 
+    render 'tasks/update' if @task&.update(completed: false)
   end
 
   private
-    def task_params
-      params.require(:task).permit(:content)
-    end
 
+  def task_params
+    params.require(:task).permit(:content)
+  end
 end
